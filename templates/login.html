@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login - CinePass</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="dark-theme">
+  <div class="auth-container">
+    <h2 id="auth-title">LOG IN</h2>
+    
+    <!-- Login Form -->
+    <form id="login-form" action="{{ url_for('login') }}" method="POST">
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit">LOGIN</button>
+    </form>
+    
+    <!-- Signup Form (Initially Hidden) -->
+    <form id="signup-form" action="{{ url_for('signup') }}" method="POST" style="display: none;">
+      <input type="text" name="new_username" placeholder="Choose a Username" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="new_password" placeholder="Choose a Password" required>
+      <button type="submit">SIGN UP</button>
+    </form>
+    
+    <!-- Toggle between Login and Signup -->
+    <p id="toggle-auth">Don't have an account? <a href="#" onclick="toggleAuth()">Sign Up</a></p>
+    
+    <!-- Go Back Button -->
+    <button type="button" onclick="window.location.href='{{ url_for('home') }}';">Go Back</button>
+  </div>
+  
+  <script>
+    function toggleAuth() {
+      let loginForm = document.getElementById("login-form");
+      let signupForm = document.getElementById("signup-form");
+      let authTitle = document.getElementById("auth-title");
+      let toggleText = document.getElementById("toggle-auth");
+      
+      if (loginForm.style.display === "none") {
+        loginForm.style.display = "block";
+        signupForm.style.display = "none";
+        authTitle.innerText = "LOG IN";
+        toggleText.innerHTML = "Don't have an account? <a href='#' onclick='toggleAuth()'>Sign Up</a>";
+      } else {
+        loginForm.style.display = "none";
+        signupForm.style.display = "block";
+        authTitle.innerText = "SIGN UP";
+        toggleText.innerHTML = "Already have an account? <a href='#' onclick='toggleAuth()'>Log In</a>";
+      }
+    }
+  </script>
+</body>
+</html>

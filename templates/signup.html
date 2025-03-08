@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign Up - CinePass</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="dark-theme">
+  <div class="auth-container">
+    <h2>SIGN UP</h2>
+    <form action="{{ url_for('signup') }}" method="POST">
+      <input type="text" name="new_username" placeholder="Username" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="new_password" placeholder="Password" required>
+      <button type="submit">SIGN UP</button>
+    </form>
+    <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+    
+    <!-- Go Back Button -->
+    <button type="button" onclick="window.location.href='{{ url_for('home') }}';">Go Back</button>
+  </div>
+</body>
+</html>

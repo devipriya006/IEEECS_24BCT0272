@@ -208,4 +208,5 @@ if __name__ == "__main__":
     print("Registered Routes:")
     for rule in app.url_map.iter_rules():
         print(f"Endpoint: {rule.endpoint}, URL: {rule}")
-    app.run(debug=os.environ.get("DEBUG", "False").lower() == "true")
+    port = int(os.environ.get("PORT", 5000))  # Use Render's PORT or default to 5000
+    app.run(host="0.0.0.0", port=port, debug=os.environ.get("DEBUG", "False").lower() == "true")

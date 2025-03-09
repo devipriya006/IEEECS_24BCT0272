@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theater Owner Dashboard - CinePass</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .logout-btn {
+            background-color: #ff4b5c;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #ff1c34;
+        }
+
+        .dashboard-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-movie-form {
+            margin-bottom: 30px;
+        }
+
+        .add-movie-form h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .add-movie-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .add-movie-form input,
+        .add-movie-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .add-movie-form textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .add-movie-form button {
+            background-color: #00b894;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-movie-form button:hover {
+            background-color: #009874;
+        }
+
+        .movies-list h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .movies-list table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .movies-list th,
+        .movies-list td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .movies-list th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .movies-list tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .movies-list tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>Welcome, Theater Owner!</h1>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </header>
+
+    <!-- Main Container -->
+    <div class="dashboard-container">
+        <!-- Add New Movie Section -->
+        <div class="add-movie-form">
+            <h2>Add a New Movie</h2>
+            <form id="add-movie-form">
+                <label for="title">Movie Title:</label>
+                <input type="text" id="title" name="title" required>
+
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea>
+
+                <label for="ticket_price">Ticket Price:</label>
+                <input type="number" id="ticket_price" name="ticket_price" required>
+
+                <label for="total_seats">Total Seats:</label>
+                <input type="number" id="total_seats" name="total_seats" required>
+
+                <button type="submit">Add Movie</button>
+            </form>
+        </div>
+
+        <!-- Movies List Section -->
+        <div class="movies-list">
+            <h2>Current Movies</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Ticket Price</th>
+                        <th>Total Seats</th>
+                    </tr>
+                </thead>
+                <tbody id="movies-table-body">
+                    <!-- Movies will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Function to fetch and display movies
+        async function fetchMovies() {
+            try {
+                console.log('Fetching movies for the logged-in owner...'); // Debugging
+                const response = await fetch('/api/owner/movies');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch movies');
+                }
+                const movies = await response.json();
+                console.log('Movies fetched:', movies); // Debugging
+
+                const tableBody = document.getElementById('movies-table-body');
+                tableBody.innerHTML = ''; // Clear existing rows
+
+                if (movies.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center;">No movies added yet.</td></tr>`;
+                } else {
+                    movies.forEach(movie => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${movie.title}</td>
+                            <td>${movie.description}</td>
+                            <td>$${movie.ticket_price}</td>
+                            <td>${movie.total_seats}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching movies:', error);
+            }
+        }
+
+        // Function to handle form submission
+        document.getElementById('add-movie-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent page reload
+
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const ticketPrice = document.getElementById('ticket_price').value;
+            const totalSeats = document.getElementById('total_seats').value;
+
+            console.log('Submitting movie data:', { title, description, ticketPrice, totalSeats }); // Debugging
+
+            try {
+                const response = await fetch('/api/owner/add_movie', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, description, ticket_price: ticketPrice, total_seats: totalSeats })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to add movie');
+                }
+
+                alert('Movie added successfully!');
+                fetchMovies(); // Refresh the movies list
+                document.getElementById('add-movie-form').reset(); // Clear the form
+            } catch (error) {
+                console.error('Error adding movie:', error);
+                alert('Failed to add movie. Please try again.');
+            }
+        });
+
+        // Fetch movies when the page loads
+        fetchMovies();
+    </script>
+</body>
+</html>

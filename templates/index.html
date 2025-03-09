@@ -2,30 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CinePass - Home</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <!-- Hero Section with Blurred Background -->
+  <!-- Hero Section -->
   <header class="hero">
     <div class="hero-content">
       <h1>CinePass</h1>
       <p>Book your favourite movies online with ease</p>
     </div>
   </header>
-  
-  <!-- Navigation -->
-  <nav>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
     <ul>
-      <li><a href="{{ url_for('home') }}">Home</a></li>
-      <li><a href="{{ url_for('login') }}">Login</a></li>
-      <li><a href="#">Movies</a></li>
-      <li><a href="#">About Us</a></li>
-      <li><a href="#">Contact</a></li>
+      <li><a href="/">Home</a></li>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/signup">Sign Up</a></li>
     </ul>
   </nav>
-  
+
   <!-- Movies Section -->
   <section class="movies">
     <h2>Now Showing</h2>
@@ -33,18 +30,18 @@
       <div class="movie">
         <h3>Movie Title 1</h3>
         <p>Genre: Action</p>
-        <button class="book-now">Book Now</button>
+        <button class="book-now" onclick="window.location.href='/login'">Book Now</button>
       </div>
       <div class="movie">
         <h3>Movie Title 2</h3>
         <p>Genre: Comedy</p>
-        <button class="book-now">Book Now</button>
+        <button class="book-now" onclick="window.location.href='/login'">Book Now</button>
       </div>
     </div>
   </section>
-  
+
   <footer>
-    <p>&copy; 2025 CinePass. All rights reserved.</p>
+    <p>© 2025 CinePass. All rights reserved.</p>
   </footer>
 </body>
 </html>

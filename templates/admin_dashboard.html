@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - CinePass</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="dark-background">
+  <header class="hero">
+    <div class="hero-content">
+      <h1>Admin Dashboard</h1>
+    </div>
+  </header>
+  <main style="padding: 20px;">
+    <h2>Pending Owner Approvals</h2>
+    <ul id="pending-owners"></ul>
+  </main>
+  <script>
+    async function fetchPendingOwners() {
+      const response = await fetch("/api/admin/pending_owners");
+      const owners = await response.json();
+      const list = document.getElementById("pending-owners");
+      list.innerHTML = "";
+      owners.forEach(owner => {
+        const listItem = document.createElement("li");
+        listItem.innerHTML = `${owner.username} <button onclick="approveOwner('${owner._id}')">Approve</button>`;
+        list.appendChild(listItem);
+      });
+    }
+
+    async function approveOwner(ownerId) {
+      const response = await fetch("/api/admin/approve_owner", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ owner_id: ownerId })
+      });
+      const data = await response.json();
+      alert(data.message || data.error);
+      fetchPendingOwners();
+    }
+
+    fetchPendingOwners();
+  </script>
+</body>
+</html>

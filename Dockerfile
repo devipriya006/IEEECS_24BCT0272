@@ -1,22 +1,25 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-slim
+# Use an official lightweight Python image as a base
+FROM python:3.10-slim
 
-# Set the working directory in the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . .
+# Copy only requirements file first (for better caching)
+COPY requirements.txt requirements.txt
 
-# Install any needed packages
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the port Flask runs on
+# Copy the entire project into the container
+COPY . .
+
+# Expose the port that Flask runs on
 EXPOSE 5000
 
-# Define environment variables (optional)
+# Set environment variables (important for production)
 ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_ENV=development
+ENV FLASK_ENV=production
+ENV MONGO_URI="mongodb://mongo:27017/cinepass_db"
 
-# Run the application
-CMD ["flask", "run"]
+# Start the Flask app
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]

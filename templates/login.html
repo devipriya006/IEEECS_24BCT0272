@@ -2,55 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login - CinePass</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body class="dark-theme">
+<body class="centered-page">
   <div class="auth-container">
-    <h2 id="auth-title">LOG IN</h2>
-    
-    <!-- Login Form -->
-    <form id="login-form" action="{{ url_for('login') }}" method="POST">
-      <input type="text" name="username" placeholder="Username" required>
-      <input type="password" name="password" placeholder="Password" required>
+    <h2>LOGIN</h2>
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Enter Username" required>
+      <input type="password" id="password" placeholder="Enter Password" required>
       <button type="submit">LOGIN</button>
     </form>
-    
-    <!-- Signup Form (Initially Hidden) -->
-    <form id="signup-form" action="{{ url_for('signup') }}" method="POST" style="display: none;">
-      <input type="text" name="new_username" placeholder="Choose a Username" required>
-      <input type="email" name="email" placeholder="Email" required>
-      <input type="password" name="new_password" placeholder="Choose a Password" required>
-      <button type="submit">SIGN UP</button>
-    </form>
-    
-    <!-- Toggle between Login and Signup -->
-    <p id="toggle-auth">Don't have an account? <a href="#" onclick="toggleAuth()">Sign Up</a></p>
-    
-    <!-- Go Back Button -->
-    <button type="button" onclick="window.location.href='{{ url_for('home') }}';">Go Back</button>
+    <p>Don’t have an account? <a href="{{ url_for('signup_page') }}">Sign Up</a></p>
+    <button type="button" onclick="history.back()">Go Back</button>
   </div>
-  
+
   <script>
-    function toggleAuth() {
-      let loginForm = document.getElementById("login-form");
-      let signupForm = document.getElementById("signup-form");
-      let authTitle = document.getElementById("auth-title");
-      let toggleText = document.getElementById("toggle-auth");
-      
-      if (loginForm.style.display === "none") {
-        loginForm.style.display = "block";
-        signupForm.style.display = "none";
-        authTitle.innerText = "LOG IN";
-        toggleText.innerHTML = "Don't have an account? <a href='#' onclick='toggleAuth()'>Sign Up</a>";
+    document.getElementById('login-form').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        if (data.role === "admin") {
+          window.location.href = "/admin_dashboard";
+        } else if (data.role === "owner") {
+          window.location.href = "/owner_dashboard";
+        } else {
+          window.location.href = "/user_dashboard";
+        }
       } else {
-        loginForm.style.display = "none";
-        signupForm.style.display = "block";
-        authTitle.innerText = "SIGN UP";
-        toggleText.innerHTML = "Already have an account? <a href='#' onclick='toggleAuth()'>Log In</a>";
+        alert(data.message || "Login failed");
       }
-    }
+    });
   </script>
 </body>
 </html>

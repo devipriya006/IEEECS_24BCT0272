@@ -1,24 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sign Up - CinePass</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - CinePass</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif, sans-serif;
+            background-color: #1c1c1c;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .auth-container {
+            background-color: #292929;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            width: 320px;
+            text-align: center;
+        }
+        .auth-container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .auth-container input, .auth-container select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .auth-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #00b894;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .auth-container button:hover {
+            background-color: #009874;
+        }
+        .auth-container p {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .auth-container a {
+            color: #00b894;
+            text-decoration: none;
+        }
+    </style>
 </head>
-<body class="dark-theme">
-  <div class="auth-container">
-    <h2>SIGN UP</h2>
-    <form action="{{ url_for('signup') }}" method="POST">
-      <input type="text" name="new_username" placeholder="Username" required>
-      <input type="email" name="email" placeholder="Email" required>
-      <input type="password" name="new_password" placeholder="Password" required>
-      <button type="submit">SIGN UP</button>
-    </form>
-    <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
-    
-    <!-- Go Back Button -->
-    <button type="button" onclick="window.location.href='{{ url_for('home') }}';">Go Back</button>
-  </div>
+<body>
+    <div class="auth-container">
+        <h2>Sign Up</h2>
+        <form id="signup-form">
+            <input type="text" id="username" placeholder="Choose a Username" required>
+            <input type="email" id="email" placeholder="Enter Your Email" required>
+            <input type="password" id="password" placeholder="Choose a Password" required>
+            <select id="role" required>
+                <option value="user">Register as User</option>
+                <option value="owner">Register as Owner</option>
+            </select>
+            <button type="submit">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="{{ url_for('login_page') }}">Log In</a></p>
+    </div>
+
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+
+            const response = await fetch('/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password, role })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert(data.message);
+                window.location.href = '/login'; // Redirect to login page after successful signup
+            } else {
+                alert(data.error);
+            }
+        });
+    </script>
 </body>
 </html>

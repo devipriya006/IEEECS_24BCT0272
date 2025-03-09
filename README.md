@@ -1,5 +1,6 @@
 # IEEECS_24BCT0272
 Web Task Submisison
+
 Note: Due to inconvenience in connecting with the cloud-based database system, the database has been created locally. As a result, the project could not be deployed online. Please ensure to set up a local MongoDB database to run the system successfully.
 
 Features
@@ -11,7 +12,6 @@ Frontend: Responsive, easy-to-navigate interface.
 
 Prerequisites
 Before running the project locally, ensure you have the following:
-
 Python 3.x installed
 MongoDB running locally (for database management)
 Flask installed

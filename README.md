@@ -34,4 +34,4 @@ Manage Shows: Add, movies
 
 Limitations
 The project could not be deployed online due to issues with connecting to a cloud-based database system. The database is set up locally on MongoDB.
-A preview of the website functionality has been attched when hosted locally under screenshot folder.
+A preview of the website functionality has been attached when hosted locally under screenshot folder.

@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -6,9 +7,10 @@ from bson.objectid import ObjectId
 
 app = Flask(__name__)
 
-# Configure MongoDB and secret key
-app.config["MONGO_URI"] = "mongodb://localhost:27017/cinepass_db"
-app.config["SECRET_KEY"] = "supersecretkey"  # Replace with a strong key in production
+
+# Configure MongoDB and secret key using environment variables
+app.config["MONGO_URI"] = os.environ.get("MONGO_URI", "mongodb://localhost:27017/cinepass_db")
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "supersecretkey")  # Use a strong key in production
 
 # Initialize MongoDB
 mongo = PyMongo(app)
@@ -206,4 +208,4 @@ if __name__ == "__main__":
     print("Registered Routes:")
     for rule in app.url_map.iter_rules():
         print(f"Endpoint: {rule.endpoint}, URL: {rule}")
-    app.run(debug=True)
+    app.run(debug=os.environ.get("DEBUG", "False").lower() == "true")
